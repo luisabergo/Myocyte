@@ -13,7 +13,7 @@ class MinimalModel : public ModeloEletrofisiologico
         double vnoinf(double x, double y);
         void normaliza_u();
         void resolveModelo(ResolvedorEDO* r);
-        void grava_matriz(ResolvedorEDO* r);
+        void print_matriz(ResolvedorEDO* r);
     private:
     //PARAMETROS AJUSTADOS AO PROBLEMA
         double u0;

@@ -3,12 +3,14 @@
 #include "MetodoVerlet.h"
 #include "BeemanMethod.h"
 #include "MinimalModel.h"
+#include "ModeloA.h"
 #include <iostream>
 
 ResolvedorEDO::ResolvedorEDO()
 { 
     matrizForcaAtiva = nullptr;
-    modelo = new MinimalModel();
+    modeloEletro = new MinimalModel();
+    modeloT = new ModeloA();
     //metodo = new EulerExplicito();
     metodo = new MetodoVerlet();
     //metodo = new BeemanMethod();
@@ -26,6 +28,8 @@ ResolvedorEDO::~ResolvedorEDO()
         delete[] matrizForcaAtiva;
     }
     delete metodo;
+    delete modeloEletro;
+    delete modeloT;
 }
 
 double ResolvedorEDO::getDeltaT()
@@ -100,13 +104,16 @@ void ResolvedorEDO::avanca(SistemaParticulas* sist, ExportadorSaida* exp)
     system("mkdir saida/");
     exp->exportaVTKSistema(sist, 0);
     double t, fativa;
-    ofstream arqSaida1, arqSaida2, arqSaida3, arqSaida4, arqSaida5, arqSaida6;
+    modeloEletro->resolveModelo(this);
+    ofstream arqSaida1, arqSaida2, arqSaida3, arqSaida4, arqSaida5, arqSaida6, arqSaida7, arqSaida8;
     arqSaida1.open("saida/No.out", std::ofstream::app);
     arqSaida2.open("saida/Energia.out", std::ofstream::app);
     arqSaida3.open("saida/Eixo.out", std::ofstream::app);
     arqSaida4.open("saida/Est.out", std::ofstream::app);
     arqSaida5.open("saida/DefTotal.out", std::ofstream::app);
     arqSaida6.open("saida/RotTotal.out", std::ofstream::app);
+    arqSaida7.open("saida/phaseplan.out", std::ofstream::app);
+    arqSaida8.open("saida/phaseplany.out", std::ofstream::app);
 
     for (int k=0; k<num_passos; k++)
     {  
@@ -134,7 +141,7 @@ void ResolvedorEDO::avanca(SistemaParticulas* sist, ExportadorSaida* exp)
         if(k%1000 == 0)
             exp->exportaVTKSistema(sist, k);
         exp->salvaEnergia(sist, arqSaida2, k);
-        exp->salvaNo(sist, 0, k, arqSaida1);
+        exp->salvaNo(sist, 0, k, arqSaida1, arqSaida7, arqSaida8);
         exp->salvaEixo(sist, arqSaida3, k);
         exp->salvaDeformacaoTotal(sist, arqSaida5, k);
         exp->salvaRotacao(sist, arqSaida6, k);
@@ -146,9 +153,11 @@ void ResolvedorEDO::avanca(SistemaParticulas* sist, ExportadorSaida* exp)
     arqSaida4.close();
     arqSaida5.close();
     arqSaida6.close();
+    arqSaida7.close();
+    arqSaida8.close();
 }
 
 void ResolvedorEDO::calculaForcaAtiva()
 {
-    modelo->resolveModelo(this);
+    modeloEletro->resolveModelo(this);
 }

@@ -1,10 +1,11 @@
 class ResolvedorEDO;
 
-class ModeloEletrofisiologico
+class ModeloTensao
 {
     public:
-        ModeloEletrofisiologico();
-        ~ModeloEletrofisiologico();
+        ModeloTensao();
+        ~ModeloTensao();
         virtual void resolveModelo(ResolvedorEDO* r) = 0;
     private:
+        
 };

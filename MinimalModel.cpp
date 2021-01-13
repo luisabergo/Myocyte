@@ -1,5 +1,6 @@
 #include "MinimalModel.h"
 #include <math.h>
+# include <iostream> 
 
 MinimalModel::MinimalModel()
 {
@@ -80,12 +81,13 @@ void MinimalModel::normaliza_u(){
 	}	
 }
 
-void MinimalModel::grava_matriz(ResolvedorEDO* r)
+void MinimalModel::print_matriz(ResolvedorEDO* r)
 {
 
 	int i;
 	double t=0;
     for (i = 0; i < 12000; i++){
+		cout << t << " " <<  udef[i] << " " << vdef[i] << " " << wdef[i] << " " << sdef[i] << " " << endl;
 		t += HT;
 	}
 
@@ -141,6 +143,6 @@ void MinimalModel::resolveModelo(ResolvedorEDO* r)
     }
     
     normaliza_u();
-    grava_matriz(r);
+    print_matriz(r);
 
 }
