@@ -15,6 +15,7 @@ class ResolvedorEDO
     public:
         ResolvedorEDO();
         ~ResolvedorEDO();
+        double getPotencial(double t);
         double getDeltaT();
         void setDeltaT(double dt);
         int getNumPassos();
@@ -37,6 +38,7 @@ class ResolvedorEDO
         double tempo_inicial;
         double** matrizForcaAtiva; // Matriz com força ativa por unidade discretizada matriz[Npassos][2] primeira coluna tempo, segunda força
         int numLinhasForca;
+        double* potencial;
         MetodoAvanca* metodo;
         ModeloEletrofisiologico* modeloEletro;
         ModeloTensao* modeloT;

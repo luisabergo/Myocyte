@@ -80,7 +80,7 @@ void ResolvedorEDO::setMatrizForca(double** m)
 
 void ResolvedorEDO::imprimeMatrizForca()
 {
-    cout << "Imprime Matrz de For'cas" << endl;
+    cout << "Imprime Matriz de Forcas" << endl;
     for(int i=0; i<numLinhasForca; i++)
     {
         for(int j=0; j<2; j++)
@@ -98,14 +98,28 @@ void ResolvedorEDO::setNumLinhas(int nl)
     numLinhasForca = nl;
 }
 
+double ResolvedorEDO::getPotencial(double t)
+{
+    int ind = int(int(12000./600.)*t);
+    return potencial[ind];
+}
+
 void ResolvedorEDO::avanca(SistemaParticulas* sist, ExportadorSaida* exp)
 {
+
+
     system("rm -rf saida/");
     system("mkdir saida/");
     exp->exportaVTKSistema(sist, 0);
     double t, fativa;
     modeloEletro->resolveModelo(this);
-    ofstream arqSaida1, arqSaida2, arqSaida3, arqSaida4, arqSaida5, arqSaida6, arqSaida7, arqSaida8;
+    potencial = modeloEletro->getPotencial();
+    /*for (int i = 0; i < 12000; i++)
+        cout << potencial[i] << endl;*/
+
+    modeloT->resolveModelo(this);
+    //modeloT->printSolucao();
+   /* ofstream arqSaida1, arqSaida2, arqSaida3, arqSaida4, arqSaida5, arqSaida6, arqSaida7, arqSaida8;
     arqSaida1.open("saida/No.out", std::ofstream::app);
     arqSaida2.open("saida/Energia.out", std::ofstream::app);
     arqSaida3.open("saida/Eixo.out", std::ofstream::app);
@@ -154,7 +168,7 @@ void ResolvedorEDO::avanca(SistemaParticulas* sist, ExportadorSaida* exp)
     arqSaida5.close();
     arqSaida6.close();
     arqSaida7.close();
-    arqSaida8.close();
+    arqSaida8.close();*/
 }
 
 void ResolvedorEDO::calculaForcaAtiva()

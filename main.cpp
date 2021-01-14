@@ -7,6 +7,7 @@ using namespace std;
 int main (int argc, const char* argv[])
 {
 
+
     // Funcao CommandLineArgs realiza a leitura de parametros da chamada da funcao.
 
     CommandLineArgs::init(argc,argv); 

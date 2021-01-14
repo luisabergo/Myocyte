@@ -14,6 +14,11 @@ class MinimalModel : public ModeloEletrofisiologico
         void normaliza_u();
         void resolveModelo(ResolvedorEDO* r);
         void print_matriz(ResolvedorEDO* r);
+        double* getPotencial();
+        double* getW();
+        double* getV();
+        double* getS();
+        double* getT();
     private:
     //PARAMETROS AJUSTADOS AO PROBLEMA
         double u0;

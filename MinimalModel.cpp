@@ -1,6 +1,6 @@
 #include "MinimalModel.h"
 #include <math.h>
-# include <iostream> 
+#include <iostream>
 
 MinimalModel::MinimalModel()
 {
@@ -37,8 +37,29 @@ MinimalModel::MinimalModel()
 }
 
 MinimalModel::~MinimalModel()
-{}
+{
 
+}
+double* MinimalModel::getPotencial()
+{
+	return udef;
+}
+double* MinimalModel::getW()
+{
+	return wdef;
+}
+double* MinimalModel::getV()
+{
+	return vdef;
+}
+double* MinimalModel::getS()
+{
+	return sdef;
+}
+double* MinimalModel::getT()
+{
+	return tdef;
+}
 
 double MinimalModel::H(double x, double y)
 {
@@ -86,8 +107,11 @@ void MinimalModel::print_matriz(ResolvedorEDO* r)
 
 	int i;
 	double t=0;
-    for (i = 0; i < 12000; i++){
-		cout << t << " " <<  udef[i] << " " << vdef[i] << " " << wdef[i] << " " << sdef[i] << " " << endl;
+	//Sao printados 5 informacoes por linha
+	// tempo, 
+    for (i = 0; i < 12000; i++)
+    {
+		//cout << t << " " <<  udef[i] << " " << vdef[i] << " " << wdef[i] << " " << sdef[i] << " " << endl;
 		t += HT;
 	}
 
