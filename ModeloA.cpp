@@ -15,9 +15,9 @@ ModeloA::~ModeloA()
 
 void ModeloA::avanca(double* y, double* ynew, int nPasso, double deltat, ResolvedorEDO* r )
 {
-    ynew[0] = y[0] + deltat*dTa(Ta,nPasso*deltat, r);
+    ynew[0] = y[0] + deltat*dTa(y,nPasso*deltat, r);
     y[0] = ynew[0];
-    ynew[1] = y[1] + deltat*dTai(Ta,nPasso*deltat, r);
+    ynew[1] = y[1] + deltat*dTai(y,nPasso*deltat, r);
     y[1] = ynew[1];
     
 }
@@ -73,7 +73,5 @@ double ModeloA::dTai(double* y, double t, ResolvedorEDO* r)
 
 double ModeloA::dTa(double* y, double t, ResolvedorEDO* r)
 {
-    double aux = E1(y,t,r);
-    cout << y[_Tai_] - y[_Ta_] << endl;
-    return E1(y,t, r)*(y[_Tai_] - y[_Ta_]);
+    return E1(y,t, r)*(y[1] - y[0]);
 }
