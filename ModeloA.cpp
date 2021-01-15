@@ -5,7 +5,11 @@
 
 ModeloA::ModeloA()
 {
-
+    for(int i=0; i<12000; i++)
+    {
+        Tai[i] = 0;
+        Ta[i] = 0;
+    }
 }
 
 ModeloA::~ModeloA()
@@ -31,14 +35,15 @@ void ModeloA::resolveModelo(ResolvedorEDO* r)
     double ynovo[2];
     Ta[0] = y[0];
     Tai[0] = y[1];
-    for (int k=1; k<=num_passos; k++)
+    for (int k=1; k<num_passos; k++)
     {
         this->avanca(y, ynovo, k, dt, r);
         Ta[k] = ynovo[0];
         Tai[k] = ynovo[1];
 
     }
-    printSolucao();
+    normaliza();
+    //printSolucao();
 
 }
 
@@ -46,7 +51,7 @@ void ModeloA::printSolucao()
 {
     for(int i=0; i<12000; i++)
     {
-        cout << Ta[i] << " " << Tai[i] << endl;
+        cout << i*0.05 << Ta[i] << endl;
     }
 }
 
@@ -68,10 +73,34 @@ double ModeloA::E1(double* y, double t, ResolvedorEDO* r)
 double ModeloA::dTai(double* y, double t, ResolvedorEDO* r)
 {
     double V = r->getPotencial(t);
-    return C0*(k(V,y[_Tai_]) - y[_Tai_]);
+
+    return C0*(k(V,y[0]) - y[0]);
 }
 
 double ModeloA::dTa(double* y, double t, ResolvedorEDO* r)
 {
     return E1(y,t, r)*(y[1] - y[0]);
+}
+
+double* ModeloA::getTensaoAtiva()
+{
+    return Ta;
+}
+
+void ModeloA::normaliza()
+{
+    double taMax = 0;
+    for(int i=0; i<12000; i++)
+    {
+        if(Ta[i] > taMax)
+        {
+            taMax = Ta[i];
+        }
+
+    }
+    for(int i=0; i<12000; i++)
+    {
+        Ta[i] = Ta[i]/taMax;
+    }
+
 }

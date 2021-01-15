@@ -106,20 +106,19 @@ double ResolvedorEDO::getPotencial(double t)
 
 void ResolvedorEDO::avanca(SistemaParticulas* sist, ExportadorSaida* exp)
 {
-
-
     system("rm -rf saida/");
     system("mkdir saida/");
     exp->exportaVTKSistema(sist, 0);
     double t, fativa;
+    double* tensao;
     modeloEletro->resolveModelo(this);
     potencial = modeloEletro->getPotencial();
-    /*for (int i = 0; i < 12000; i++)
-        cout << potencial[i] << endl;*/
 
     modeloT->resolveModelo(this);
     //modeloT->printSolucao();
-   /* ofstream arqSaida1, arqSaida2, arqSaida3, arqSaida4, arqSaida5, arqSaida6, arqSaida7, arqSaida8;
+    tensao = modeloT->getTensaoAtiva();
+    //Migrar abertura de arquivos para dentro de funcoes do exportador
+    ofstream arqSaida1, arqSaida2, arqSaida3, arqSaida4, arqSaida5, arqSaida6, arqSaida7, arqSaida8, arqSaida9;
     arqSaida1.open("saida/No.out", std::ofstream::app);
     arqSaida2.open("saida/Energia.out", std::ofstream::app);
     arqSaida3.open("saida/Eixo.out", std::ofstream::app);
@@ -128,6 +127,8 @@ void ResolvedorEDO::avanca(SistemaParticulas* sist, ExportadorSaida* exp)
     arqSaida6.open("saida/RotTotal.out", std::ofstream::app);
     arqSaida7.open("saida/phaseplan.out", std::ofstream::app);
     arqSaida8.open("saida/phaseplany.out", std::ofstream::app);
+    arqSaida9.open("saida/potencialTensao.out", std::ofstream::app);
+    
 
     for (int k=0; k<num_passos; k++)
     {  
@@ -135,11 +136,13 @@ void ResolvedorEDO::avanca(SistemaParticulas* sist, ExportadorSaida* exp)
         t = sist->getT();
         if(k%50==0)
         {    
-            fativa = matrizForcaAtiva[k/50][1];
-            //cout << "Tempo " << t << " Matriz " << fativa << endl;
+            //fativa = matrizForcaAtiva[k/50][1];
+            fativa = tensao[k/50];
+            cout << "Tempo " << t << " Matriz " << fativa << endl;
+            arqSaida9 << t << " " << potencial[k/50] << " " << fativa << endl;
         }
         if(k%1000==0)
-            cout << "Tempo " << t << endl;
+           // cout << "Tempo " << t << endl;
         sist->calculaForcas(t, fativa);
         metodo->avanca(k,sist, delta_t);
         if(t==168)
@@ -168,7 +171,8 @@ void ResolvedorEDO::avanca(SistemaParticulas* sist, ExportadorSaida* exp)
     arqSaida5.close();
     arqSaida6.close();
     arqSaida7.close();
-    arqSaida8.close();*/
+    arqSaida8.close();
+    arqSaida9.close();
 }
 
 void ResolvedorEDO::calculaForcaAtiva()

@@ -14,6 +14,8 @@ class ModeloA : public ModeloTensao
         double dTai(double* y, double t, ResolvedorEDO* r);
         double dTa(double* y, double t, ResolvedorEDO* r);
         void avanca(double* y, double* ynew, int nPasso, double deltat, ResolvedorEDO* r );
+        void normaliza();
+        double* getTensaoAtiva();
         const double C0 = 0.0166015;
         const double x1 = 0.0001;
         const double x2 = 0.78;
