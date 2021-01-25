@@ -311,7 +311,7 @@ void SistemaParticulas::calculaForcas(double tempo, double fat)
                     }
                     
                     p[ip][0].somaForcaMola(0, -elas * (norma - l0) * pos_dif[0] / norma);
-                    p[ip][0].somaForcaMola(1, -(44) * (norma - l0) * pos_dif[1] / norma);
+                    p[ip][0].somaForcaMola(1, -(40) * (norma - l0) * pos_dif[1] / norma);
                     
                 } else 
                 {
@@ -327,9 +327,9 @@ void SistemaParticulas::calculaForcas(double tempo, double fat)
             }
 
             if(matrizChar[ip][1] == 'm')
-                p[ip][0].somaForcaMola(0, -85*fat);
+                p[ip][0].somaForcaMola(0, -65*fat);
             if(matrizChar[ip][3] == 'm')
-                p[ip][0].somaForcaMola(0, 85*fat);
+                p[ip][0].somaForcaMola(0, 65*fat);
 
             //Obtençao dos vértices da célula
 

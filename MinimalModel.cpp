@@ -1,37 +1,37 @@
 #include "MinimalModel.h"
 #include <math.h>
-#include <iostream>
 
 MinimalModel::MinimalModel()
 {
-    u0 = 0;
-    uu = 1.58;
-    thetav = 0.3;
-    thetaw = 0.015;
-    thetavlinha = 0.015;
-    theta0 = 0.006;
-    tauv1 = 60;
-    tauv2 = 1150;
-    tauvmais = 1.4506;
-    tauw1 = 70;
-    tauw2 = 20;
-    kw = 65;
-    uw = 0.03;
-    tauwmais = 280;
-    taufi = 0.11;
-    tau01 = 6;
-    tau02 = 6;
-    taus01 = 43;
-    taus02 = 0.2;
-    kso = 2;
-    uso = 0.65;
-    taus1 = 2.7342;
-    taus2 = 3;
-    ks = 2.0994;
-    us = 0.9087;
-    tausi = 2.8723;
-    tauwinf = 0.07;
-    winfstar = 0.94;
+	u0 = 0.529297;
+	uu = 1.74316;
+	thetav = 0.0673828;
+	thetaw = 0.00195313;
+	thetavlinha = 0.0976563;
+	theta0 = 0.932618;
+	tauv1 = 57.7148;
+	tauv2 = 1101.56;
+	tauvmais = 1.96973;
+	tauw1 = 62.9688;
+	tauw2 = 13.9648;
+	kw = 58.0469;
+	uw = 0.59668;
+	tauwmais = 273.633 ;
+	taufi =  0.644532;
+	tau01 = 477.344 ;
+	tau02 = 14.1992;
+	taus01 = 25.4492;
+	taus02 = 0.253711;
+	kso = 2.49609;
+	uso = 0.657227;
+	taus1 = 2.36621 ;
+	taus2 = 11.4453 ;
+	ks = 2.25586;
+	us = 0.903321;
+	tausi = 1.76816;
+	tauwinf =  0.785157;
+	winfstar = 0.500977;
+
 
     HT = 0.05;
 }
@@ -133,7 +133,7 @@ void MinimalModel::resolveModelo(ResolvedorEDO* r)
 
 	int i;
 	for (i = 1; i < 12000; i++){
-		if (i == 1000) u = 0.325;
+		if (i%12000 == 1000) u += 0.325;
 		
 		tauv = (1 - H(u, thetavlinha))*tauv1 + H(u, thetavlinha)*tauv2;
 		tauw = tauw1 + (tauw2-tauw1)*(1 + tanh(kw*(u-uw)))/2.0;

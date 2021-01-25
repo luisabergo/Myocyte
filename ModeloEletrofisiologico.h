@@ -1,3 +1,6 @@
+#ifndef _modelo_eletrofisiologico_h_
+#define _modelo_eletrofisiologico_h_
+
 class ResolvedorEDO;
 
 class ModeloEletrofisiologico
@@ -8,4 +11,7 @@ class ModeloEletrofisiologico
         virtual void resolveModelo(ResolvedorEDO* r) = 0;
         virtual double* getPotencial() = 0;
     private:
+        
 };
+
+#endif

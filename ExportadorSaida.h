@@ -11,7 +11,7 @@ class ExportadorSaida
         ExportadorSaida();
         ~ExportadorSaida();
         bool exportaVTKSistema(SistemaParticulas* s, int num_passo);
-        void salvaNo(SistemaParticulas * s, int I, int num_passo,ofstream & fx, ofstream & fv,  ofstream & fvy);
+        void salvaNo(SistemaParticulas * s, int I, int num_passo,ofstream & f);
         void salvaEnergia(SistemaParticulas * s, ofstream & arqSaida, int num_passo);
         void salvaEixo(SistemaParticulas * s, ofstream & arqSaida, int num_passo);
         void salvaEst(SistemaParticulas * s, ofstream & arqSaida, double dt);

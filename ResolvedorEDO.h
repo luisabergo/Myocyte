@@ -1,21 +1,17 @@
-#include "SistemaParticulas.h"
-#include "ExportadorSaida.h"
-#include "MetodoAvanca.h"
-
-class ModeloTensao;
-class ModeloEletrofisiologico;
-
 #ifndef _resolvedor_edo_h_
 #define _resolvedor_edo_h_
 
-
+#include "SistemaParticulas.h"
+#include "ExportadorSaida.h"
+#include "MetodoAvanca.h"
+#include "ModeloEletrofisiologico.h"
+class ModeloTensao;
 
 class ResolvedorEDO
 {
     public:
         ResolvedorEDO();
         ~ResolvedorEDO();
-        double getPotencial(double t);
         double getDeltaT();
         void setDeltaT(double dt);
         int getNumPassos();
@@ -39,6 +35,7 @@ class ResolvedorEDO
         double** matrizForcaAtiva; // Matriz com força ativa por unidade discretizada matriz[Npassos][2] primeira coluna tempo, segunda força
         int numLinhasForca;
         double* potencial;
+        double* tensao;
         MetodoAvanca* metodo;
         ModeloEletrofisiologico* modeloEletro;
         ModeloTensao* modeloT;

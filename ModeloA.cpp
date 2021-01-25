@@ -1,7 +1,9 @@
 #include "ModeloA.h"
 #include <math.h>
-#include "ResolvedorEDO.h"
 #include <iostream> 
+
+using namespace std;
+class ResolvedorEDO;
 
 ModeloA::ModeloA()
 {
@@ -17,33 +19,55 @@ ModeloA::~ModeloA()
 
 }
 
-void ModeloA::avanca(double* y, double* ynew, int nPasso, double deltat, ResolvedorEDO* r )
+void ModeloA::resolveModelo(ResolvedorEDO* r, double* V)
 {
-    ynew[0] = y[0] + deltat*dTa(y,nPasso*deltat, r);
-    y[0] = ynew[0];
-    ynew[1] = y[1] + deltat*dTai(y,nPasso*deltat, r);
-    y[1] = ynew[1];
-    
-}
-
-void ModeloA::resolveModelo(ResolvedorEDO* r)
-{
-    int num_passos = 12000;
-    double dt = 0.05;
-    double aux;
-    double y[2] = {0.0, 0.0};
-    double ynovo[2];
-    Ta[0] = y[0];
-    Tai[0] = y[1];
-    for (int k=1; k<num_passos; k++)
+    const int tamdisc = 12000;
+    double tensao[tamdisc], tensao2[tamdisc], vreal[tamdisc], kv[tamdisc], e1[tamdisc];
+    kv[0] = 0;
+    e1[0] = 0;
+    double TaAux, Ta2, d_dt_Ta2, d_dt_Ta, myCond, kta;
+    TaAux = 0;
+	Ta2 = 0;
+    tensao2[0] = 0; 
+    tensao[0] = 0;
+    for (int i = 1; i < tamdisc; i++)
     {
-        this->avanca(y, ynovo, k, dt, r);
-        Ta[k] = ynovo[0];
-        Tai[k] = ynovo[1];
 
-    }
-    normaliza();
-    //printSolucao();
+    	kta = k(V[i]); // kTa(v) para Ta
+    	kv[i] = kta;
+		myCond = e0_1;//rateswitchNP(svolt[j], et_1, e0_1, e1_1); // e1(v)
+		d_dt_Ta = myCond * (kta - TaAux); // Derivada de Ta
+		TaAux = TaAux + 0.05*d_dt_Ta;  //Integração de Ta
+		tensao[i] = TaAux;
+        Ta[i] = tensao[i];
+		
+		//	ATUALIZAÇÕES DE TA_2
+		if (V[i] > x5 && TaAux < x6) myCond = 0.0001;
+		e1[i] = myCond;
+		d_dt_Ta2 = myCond * (TaAux - Ta2); // Derivada de Ta2
+		Ta2 = Ta2 + 0.05*d_dt_Ta2;  //Integração de Ta2
+
+		tensao2[i] = Ta2;
+        Tai[i] = tensao2[i];
+	}
+
+    int i;
+    double maior, menor;
+    
+    maior = 0;
+    menor = 100000000;
+    
+    for (i = 0; i < 12000; i++){
+		if (tensao2[i] > maior){
+			maior = tensao2[i];
+		}
+		if (tensao2[i] < menor){
+			menor = tensao2[i];
+		}
+	}
+	for (i = 0; i < 12000; i++){
+		tensao2[i] = (tensao2[i] - menor)/(maior - menor);
+	}	
 
 }
 
@@ -55,52 +79,13 @@ void ModeloA::printSolucao()
     }
 }
 
-double ModeloA::k(double V, double Tai)
+double ModeloA::k(double V)
 {
-    return (1./(sigma*sqrt(2*3.14))) * exp((-pow(V - 1, 2.)/(2.*pow(sigma,2.))));
-}
-
-double ModeloA::E1(double* y, double t, ResolvedorEDO* r)
-{
-    double V = r->getPotencial(t);
-
-    if(V>x2 and y[_Tai_]<x3)
-        return x1;
-    else
-        return C0;
-}
-
-double ModeloA::dTai(double* y, double t, ResolvedorEDO* r)
-{
-    double V = r->getPotencial(t);
-
-    return C0*(k(V,y[0]) - y[0]);
-}
-
-double ModeloA::dTa(double* y, double t, ResolvedorEDO* r)
-{
-    return E1(y,t, r)*(y[1] - y[0]);
+    return (1/(x1*sqrt(2*3.14))) * exp((-pow(V - 1, 2)/(2*pow(x1,2))));
 }
 
 double* ModeloA::getTensaoAtiva()
 {
-    return Ta;
+    return Tai;
 }
 
-void ModeloA::normaliza()
-{
-    double taMax = 0;
-    for(int i=0; i<12000; i++)
-    {
-        if(Ta[i] > taMax)
-        {
-            taMax = Ta[i];
-        }
-
-    }
-    for(int i=0; i<12000; i++)
-    {
-        Ta[i] = Ta[i]/taMax;
-    }
-
-}

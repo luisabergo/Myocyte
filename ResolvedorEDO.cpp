@@ -3,8 +3,8 @@
 #include "MetodoVerlet.h"
 #include "BeemanMethod.h"
 #include "MinimalModel.h"
-#include "ModeloA.h"
 #include <iostream>
+#include "ModeloA.h"
 
 ResolvedorEDO::ResolvedorEDO()
 { 
@@ -80,7 +80,7 @@ void ResolvedorEDO::setMatrizForca(double** m)
 
 void ResolvedorEDO::imprimeMatrizForca()
 {
-    cout << "Imprime Matriz de Forcas" << endl;
+    cout << "Imprime Matrz de For'cas" << endl;
     for(int i=0; i<numLinhasForca; i++)
     {
         for(int j=0; j<2; j++)
@@ -98,37 +98,24 @@ void ResolvedorEDO::setNumLinhas(int nl)
     numLinhasForca = nl;
 }
 
-double ResolvedorEDO::getPotencial(double t)
-{
-    int ind = int(int(12000./600.)*t);
-    return potencial[ind];
-}
-
 void ResolvedorEDO::avanca(SistemaParticulas* sist, ExportadorSaida* exp)
 {
     system("rm -rf saida/");
     system("mkdir saida/");
     exp->exportaVTKSistema(sist, 0);
     double t, fativa;
-    double* tensao;
     modeloEletro->resolveModelo(this);
     potencial = modeloEletro->getPotencial();
-
-    modeloT->resolveModelo(this);
-    //modeloT->printSolucao();
+    modeloT->resolveModelo(this, potencial);
     tensao = modeloT->getTensaoAtiva();
-    //Migrar abertura de arquivos para dentro de funcoes do exportador
-    ofstream arqSaida1, arqSaida2, arqSaida3, arqSaida4, arqSaida5, arqSaida6, arqSaida7, arqSaida8, arqSaida9;
+    ofstream arqSaida1, arqSaida2, arqSaida3, arqSaida4, arqSaida5, arqSaida6, arqSaida7;
     arqSaida1.open("saida/No.out", std::ofstream::app);
     arqSaida2.open("saida/Energia.out", std::ofstream::app);
     arqSaida3.open("saida/Eixo.out", std::ofstream::app);
     arqSaida4.open("saida/Est.out", std::ofstream::app);
     arqSaida5.open("saida/DefTotal.out", std::ofstream::app);
     arqSaida6.open("saida/RotTotal.out", std::ofstream::app);
-    arqSaida7.open("saida/phaseplan.out", std::ofstream::app);
-    arqSaida8.open("saida/phaseplany.out", std::ofstream::app);
-    arqSaida9.open("saida/potencialTensao.out", std::ofstream::app);
-    
+    arqSaida7.open("saida/potencialTensao.out", std::ofstream::app);
 
     for (int k=0; k<num_passos; k++)
     {  
@@ -136,13 +123,12 @@ void ResolvedorEDO::avanca(SistemaParticulas* sist, ExportadorSaida* exp)
         t = sist->getT();
         if(k%50==0)
         {    
-            //fativa = matrizForcaAtiva[k/50][1];
-            fativa = tensao[k/50];
-            cout << "Tempo " << t << " Matriz " << fativa << endl;
-            arqSaida9 << t << " " << potencial[k/50] << " " << fativa << endl;
+            fativa = tensao[k/50] ;
+            //cout << "Tempo " << t << " Matriz " << fativa << endl;
+            arqSaida7 << t <<  " " << potencial[k/50] <<  " " << tensao[k/50] << endl;
         }
         if(k%1000==0)
-           // cout << "Tempo " << t << endl;
+            cout << "Tempo " << t << endl;
         sist->calculaForcas(t, fativa);
         metodo->avanca(k,sist, delta_t);
         if(t==168)
@@ -158,7 +144,7 @@ void ResolvedorEDO::avanca(SistemaParticulas* sist, ExportadorSaida* exp)
         if(k%1000 == 0)
             exp->exportaVTKSistema(sist, k);
         exp->salvaEnergia(sist, arqSaida2, k);
-        exp->salvaNo(sist, 0, k, arqSaida1, arqSaida7, arqSaida8);
+        exp->salvaNo(sist, 0, k, arqSaida1);
         exp->salvaEixo(sist, arqSaida3, k);
         exp->salvaDeformacaoTotal(sist, arqSaida5, k);
         exp->salvaRotacao(sist, arqSaida6, k);
@@ -171,8 +157,6 @@ void ResolvedorEDO::avanca(SistemaParticulas* sist, ExportadorSaida* exp)
     arqSaida5.close();
     arqSaida6.close();
     arqSaida7.close();
-    arqSaida8.close();
-    arqSaida9.close();
 }
 
 void ResolvedorEDO::calculaForcaAtiva()

@@ -7,7 +7,6 @@ using namespace std;
 int main (int argc, const char* argv[])
 {
 
-
     // Funcao CommandLineArgs realiza a leitura de parametros da chamada da funcao.
 
     CommandLineArgs::init(argc,argv); 
@@ -40,12 +39,12 @@ int main (int argc, const char* argv[])
     // Funcoes de verificacao de entradas
     if(entradaArquivo == "none")
     {
-        cout << "Uso: \n ./SimuladorTecido -f2 dados/modeloa1.txt -f1 dados/celula.txt  \n" << endl;
+        cout << "Uso: \n ./Miocitos -f1 [arquivomalha]\n -f2 [arquivoforca] \n" << endl;
         exit(1);
     }
     if(entradaForca =="none")
     {
-        cout << "Uso: \n ./SimuladorTecido -f2 dados/modeloa1.txt -f1 dados/celula.txt  \n" << endl;
+        cout << "Uso: \n ./Miocitos -f1 [arquivomalha]\n -f2 [arquivoforca] \n" << endl;
         exit(1);
     }
 

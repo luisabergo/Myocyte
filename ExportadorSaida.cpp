@@ -268,39 +268,23 @@ void ExportadorSaida::salvaEnergia(SistemaParticulas * s, ofstream & arqSaida, i
     arqSaida << Ecin << endl;
 }
 
-void ExportadorSaida::salvaNo(SistemaParticulas * s, int I, int num_passo,ofstream & fx, ofstream & fv, ofstream & fvy)
+void ExportadorSaida::salvaNo(SistemaParticulas * s, int I, int num_passo,ofstream & f)
 {   
     int NX = s->getNx();
     int NY = s->getNy();
     int NP = s->getNp();
 
-    if(!fx) 
-    { 
-        cout << "Arquivo não pode ser aberto para saída\n";
-    } 
-    if(!fv) 
+    if(!f) 
     { 
         cout << "Arquivo não pode ser aberto para saída\n";
     }
-    if(!fvy) 
-    { 
-        cout << "Arquivo não pode ser aberto para saída\n";
-    }
-
-    fx <<  s->getT() << " ";
-
-    fv << s->getT() << " ";
-
-    fvy << s->getT() << " ";
+    
+    f <<  s->getT() << " ";
 
     for (int ip=0; ip<NP; ip++)
     {   
         if(ip==I)
-		{
-            fx << s->getP(ip, 0).getvetorPosicaoat(0) << " "  << s->getP(ip, 0).getvetorPosicaoat(1)  << endl; 
-            fv << s->getP(ip, 0).getvetorPosicaoat(0) << " "  << s->getP(ip, 0).getMassa()*s->getP(ip, 0).getvetorVelocidadeat(0) << endl;
-            fvy << s->getP(ip, 0).getvetorPosicaoat(1) << " "  << s->getP(ip, 0).getMassa()*s->getP(ip, 0).getvetorVelocidadeat(1) << endl;
-        }
+		f << s->getP(ip, 0).getvetorPosicaoat(0) << " "  << s->getP(ip, 0).getvetorPosicaoat(1)  << endl; 
     } 
 
 }
